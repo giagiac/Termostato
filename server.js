@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 dispatcher.setStatic('resources');
-dispatcher.setStaticDirname('/root/NodeJs/Matrix8x8_TextThermostat');
+dispatcher.setStaticDirname('/Termostato');
 
 dispatcher.onGet("/HomePage", function (req, res) {
 	//fermo il display
@@ -59,7 +59,7 @@ dispatcher.onGet("/HomePage", function (req, res) {
 	}
 
 	console.log("HomePage get");
-    bind.toFile('/root/NodeJs/Matrix8x8_TextThermostat/template/pageMain.tpl', calendar.myCalendar ,
+    bind.toFile('/Termostato/template/pageMain.tpl', calendar.myCalendar ,
         function (data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);

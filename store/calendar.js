@@ -1,15 +1,15 @@
 {
     "monday": [
         {
-            "start": "02:20",
+            "start": "",
             "end": "",
-            "temperature": "20"
+            "temperature": "18"
         }
     ],
     "tuesday": [
         {
-            "start": "05:20",
-            "end": "05:21",
+            "start": "19:41",
+            "end": "19:42",
             "temperature": "18"
         }
     ],
