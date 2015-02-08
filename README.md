@@ -8,4 +8,6 @@ questa applicazione è composta da più elementi :
 
 eseguire node server.js (dalla cartella del file .js)
 
+- la cartella store (con alcuni file di esempio) contiene i salvataggi su file system che avvengono ad ogni aggiornamento
+
 ...altre integrazioni future!
