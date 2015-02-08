@@ -1,4 +1,3 @@
-var fs = require('fs');
 var http = require('http');
 var sio = require('/Termostato/node_modules/socket.io');
 var bind = require('/Termostato/node_modules/bind');
