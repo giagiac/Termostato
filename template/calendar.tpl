@@ -3,7 +3,7 @@
   <div data-role="collapsible">  
   <h3>Monday</h3>
 
-    (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+    (:file ~ /Termostato/template/timePicker.tpl:)
     <table id="monday" class="ui-responsive ui-shadow">
       <thead>
         <tr>
@@ -36,7 +36,7 @@
   <div data-role="collapsibleset">
   <div data-role="collapsible">  
   <h3>Tuesday</h3>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+  (:file ~ /Termostato/template/timePicker.tpl:)
     <table id="tuesday" class="ui-responsive ui-shadow">
       <thead>
         <tr>
@@ -69,7 +69,7 @@
   <div data-role="collapsibleset">
   <div data-role="collapsible">  
   <h3>Wednesday</h3>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+  (:file ~ /Termostato/template/timePicker.tpl:)
     <table id="wednesday" class="ui-responsive ui-shadow">
       <thead>
         <tr>
@@ -102,7 +102,7 @@
   <div data-role="collapsibleset">
   <div data-role="collapsible">  
   <h3>Thursday</h3>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+  (:file ~ /Termostato/template/timePicker.tpl:)
     <table id="thursday" class="ui-responsive ui-shadow">
       <thead>
         <tr>
@@ -135,7 +135,7 @@
   <div data-role="collapsibleset">
   <div data-role="collapsible">  
   <h3>Friday</h3>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+  (:file ~ /Termostato/template/timePicker.tpl:)
     <table id="friday" class="ui-responsive ui-shadow">
       <thead>
         <tr>
@@ -168,7 +168,7 @@
   <div data-role="collapsibleset">
   <div data-role="collapsible">  
   <h3>Saturday</h3>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+  (:file ~ /Termostato/template/timePicker.tpl:)
     <table id="saturday" class="ui-responsive ui-shadow">
       <thead>
         <tr>
@@ -201,7 +201,7 @@
   <div data-role="collapsibleset">
   <div data-role="collapsible">  
   <h3>Sunday</h3>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/timePicker.tpl:)
+  (:file ~ /Termostato/template/timePicker.tpl:)
   <div>
     <table id="sunday" class="ui-responsive ui-shadow">
       <thead>

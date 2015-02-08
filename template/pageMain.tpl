@@ -40,18 +40,18 @@
   <div data-role="header" data-theme="b">
     <h1>Sensors</h1>
   </div>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/sensors.tpl:)
+  (:file ~ /Termostato/template/sensors.tpl:)
 
 
   <div data-role="header" data-theme="b">
     <h1>Calendar</h1>
   </div>
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/calendar.tpl:)
+  (:file ~ /Termostato/template/calendar.tpl:)
   
   <div data-role="header" data-theme="b">
   	<h1>Dashboard</h1>
   </div>  
-  (:file ~ /root/NodeJs/Matrix8x8_TextThermostat/template/dashboard.tpl:)
+  (:file ~ /Termostato/template/dashboard.tpl:)
   
 </div>
 
