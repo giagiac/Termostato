@@ -6,5 +6,6 @@ questa applicazione è composta da più elementi :
 - driver Matrix 8x8 (per scrivere testi) c++
 - webapp per schedulare la programmazione delle temperature durante la settimana
 
+eseguire node server.js (dalla cartella del file .js)
+
 ...altre integrazioni future!
-...test
