@@ -1,12 +1,12 @@
-var fs = require('fs'),
-    http = require('http'),
-    sio = require('socket.io');
-var bind = require('bind');
-var dispatcher = require('httpdispatcher');
+var fs = require('fs');
+var http = require('http');
+var sio = require('/Termostato/node_modules/socket.io');
+var bind = require('/Termostato/node_modules/bind');
+var dispatcher = require('/Termostato/node_modules/httpdispatcher');
 var addonDisplay = require('/Termostato/node_modules/AddonMatrix/build/Release/addon');
 var addonThermo = require('/Termostato/node_modules/AddonThermo/build/Release/addon');
-var calendar = require('/Termostato/Controllers/calendar.js');
-var dashboard = require('/Termostato/Controllers/dashboard.js');
+var calendar = require('/Termostato/node_modules/Controllers/calendar.js');
+var dashboard = require('/Termostato/node_modules/Controllers/dashboard.js');
 
 var matrix = {};
 
