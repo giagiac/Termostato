@@ -1,0 +1,32 @@
+body {
+    font-family: sans-serif;
+}
+
+body {
+    min-width: 320px;
+}
+
+.pickTime
+{
+	background-color: #0F0 !important;
+}
+.s
+{
+	font-size: 10px !important;
+	padding-bottom: 0px !important;
+	padding-top: 19px !important;
+}
+table
+{
+	width: 97%;
+	margin: 0 auto;
+}
+tbody
+{
+	text-align: center;
+}
+#temperature, #umidity
+{
+	font-size: 40px;
+	padding-left: 10px;
+}
