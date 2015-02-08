@@ -3,10 +3,10 @@ var fs = require('fs'),
     sio = require('socket.io');
 var bind = require('bind');
 var dispatcher = require('httpdispatcher');
-var addonDisplay = require('/root/NodeJs/Matrix8x8_TextThermostat/node_modules/AddonMatrix/build/Release/addon');  //var addon = require('matrix8x8AddOn/build/Release/addon');
-var addonThermo = require('/root/NodeJs/Matrix8x8_TextThermostat/node_modules/AddonThermo/build/Release/addon');
-var calendar = require('Controllers/calendar.js');
-var dashboard = require('Controllers/dashboard.js');
+var addonDisplay = require('/Termostato/node_modules/AddonMatrix/build/Release/addon');
+var addonThermo = require('/Termostato/node_modules/AddonThermo/build/Release/addon');
+var calendar = require('/Termostato/Controllers/calendar.js');
+var dashboard = require('/Termostato/Controllers/dashboard.js');
 
 var matrix = {};
 
