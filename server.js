@@ -13,7 +13,7 @@ var server = http.createServer(function (req, res) {
     dispatcher.dispatch(req, res);
 });
     
-server.listen(8000, function () { 
+server.listen(8000, function () {	
 	console.log('Server listening at http://localhost:8000/');
 });
 
@@ -24,7 +24,7 @@ var output = addonDisplay.begin(1, 112, 0);
 	console.log(output);
 //START DISPLAY
 	print();
-var	displayInterval = setInterval(print, 20000);
+var	displayInterval = setInterval(print, 10000);
 	
 // Attach the socket.io server
 var io = sio.listen(server);
@@ -39,7 +39,7 @@ io.sockets.on('connection', function (socket) {
 	
 	//STOP perdo la connessione riattivo il display
 	socket.on('disconnect', function(){
-    	displayInterval = setInterval(print, 20000);	
+    	displayInterval = setInterval(print, 4000);	
 	});	
         
 	setInterval(function(){
@@ -57,7 +57,6 @@ dispatcher.onGet("/HomePage", function (req, res) {
     {
 		clearInterval(displayInterval);
 	}
-
 	console.log("HomePage get");
     bind.toFile('/Termostato/template/pageMain.tpl', calendar.myCalendar ,
         function (data) {
