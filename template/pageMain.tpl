@@ -18,7 +18,7 @@
 	<script src="resources/js/jquery/jqmDateBox/jqm-datebox.mode.datebox.js"></script>
 	
 	<script src="resources/js/calendar.js"></script>
-	<script src="resources/js/sensors.js"></script>
+	<script src="resources/js/clock.js"></script>
 		<script src="resources/js/dashboard.js"></script>
 	<link rel="stylesheet" href="resources/css/main.css" />
 	
@@ -36,6 +36,11 @@
 <body>
 
 <div data-role="page" id="pageone">
+
+  <div data-role="header" data-theme="b">
+    <h1>Clock</h1>
+  </div>
+  (:file ~ /Termostato/template/clock.tpl:)
 
   <div data-role="header" data-theme="b">
     <h1>Sensors</h1>

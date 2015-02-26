@@ -1,14 +1,14 @@
 {
-    "monday": [
-        {
-            "start": "17:00",
-            "end": "17:10",
-            "temperature": "18"
-        }
-    ],
+    "monday": [],
     "tuesday": [],
     "wednesday": [],
-    "thursday": [],
+    "thursday": [
+        {
+            "start": "23:04",
+            "end": "23:11",
+            "temperature": "24"
+        }
+    ],
     "friday": [],
     "saturday": [
         {
@@ -19,9 +19,9 @@
     ],
     "sunday": [
         {
-            "start": "17:05",
-            "end": "17:20",
-            "temperature": "18"
+            "start": "22:33",
+            "end": "22:34",
+            "temperature": "24"
         }
     ]
 }

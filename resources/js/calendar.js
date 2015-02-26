@@ -3,13 +3,6 @@ var endTime = "";
 var dayOfWeek = "";
 
 $(function() {
-
-	var socket = io.connect();
-    socket.on('connect', function () {
-    	
-//    	socket.on('calendarUpdated', );
-    	
-    });
     
     $( "#ButtonStop" ).bind( "click", function(event, ui) {
         socket.emit('stop', true);
@@ -69,9 +62,9 @@ $(function() {
 		$('.ui-collapsible-heading', $spanContainer.parent()).trigger('click');
 	});
 	
-	$.post('/getSchedule', function(param){
-		redrawAllTableDay(param);
-	});
+//	$.post('/getSchedule', function(param){
+//		redrawAllTableDay(param);
+//	});
 
 });//ready
 
@@ -97,6 +90,6 @@ function redrawTableDay(calendar){
 
 function redrawAllTableDay(calendar)
 {
-	console.log(calendar);
+	//console.log(calendar);
     waitHide();
 }//redrawAllTableDay

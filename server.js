@@ -6,6 +6,8 @@ var addonDisplay = require('/Termostato/node_modules/AddonMatrix/build/Release/a
 var addonThermo = require('/Termostato/node_modules/AddonThermo/build/Release/addon');
 var calendar = require('/Termostato/node_modules/Controllers/calendar.js');
 var dashboard = require('/Termostato/node_modules/Controllers/dashboard.js');
+var sys = require('sys')
+var exec = require('child_process').exec;
 
 var matrix = {};
 
@@ -22,8 +24,8 @@ var output = addonDisplay.begin(1, 112, 0);
 	console.log(output);
 	output = addonThermo.begin();
 	console.log(output);
+
 //START DISPLAY
-	print();
 var	displayInterval = setInterval(print, 10000);
 	
 // Attach the socket.io server
@@ -39,13 +41,16 @@ io.sockets.on('connection', function (socket) {
 	
 	//STOP perdo la connessione riattivo il display
 	socket.on('disconnect', function(){
-    	displayInterval = setInterval(print, 4000);	
+    	displayInterval = setInterval(print, 5000);	
 	});	
         
 	setInterval(function(){
 		socket.emit('sensorsValues', getSensorsValues() );
 	}, 2000);
-    
+	
+	setInterval(function(){
+		socket.emit('clock', getCurrentDate() );
+	}, 3000);
 });
 
 dispatcher.setStatic('resources');
@@ -63,6 +68,14 @@ dispatcher.onGet("/HomePage", function (req, res) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);
         });
+});
+
+//SET SYSTEM DATE
+dispatcher.onPost("/setSystemDate", function (req, res) {
+	res.writeHead(200, {"Content-Type": "application/json"});
+	setSystemDate(req.params.date);
+//	console.log(req.params.date);
+    res.end( "ok" );
 });
 
 //SENSOR VALUE
@@ -139,6 +152,47 @@ function getSensorsValues()
     var roundUmid = Math.round(p.umidita * 100) / 100;
     
     return { temp: roundTemp, umid: roundUmid };
+}
+
+function setSystemDate(date)
+{
+	function puts(error, stdout, stderr) { sys.puts(stdout) }
+	exec("date -s \"" + date + "\"", puts);
+}
+
+function getCurrentDate()
+{
+	var currentDate = new Date();
+	var current = ""+currentDate.getHours() + ":" + currentDate.getMinutes();
+    if(currentDate.getDay() == 0)
+    {
+    	current += " " + "Sunday";
+    }
+    if(currentDate.getDay() == 1)
+    {
+    	current += " " + "Monday";
+    }
+    if(currentDate.getDay() == 2)
+    {
+    	current += " " + "Tuesday";
+    }
+    if(currentDate.getDay() == 3)
+    {
+    	current += " " + "Wednesday";
+    }
+    if(currentDate.getDay() == 4)
+    {
+    	current += " " + "Thursday";
+    }
+    if(currentDate.getDay() == 5)
+    {
+    	current += " " + "Friday";
+    }
+    if(currentDate.getDay() == 6)
+    {
+    	current += " " + "Saturday";
+    }
+    return current;
 }
 
 function print()

@@ -23,6 +23,24 @@ $(function() {
     $('#checkbox-manual').click(function(){
 		getSetHeatingSystem("/setHeatingSystem");
     });
+    
+    //Thread dei sensori e dell'orologio
+    
+    var socket = io.connect();
+    socket.on('connect', function () {
+    	
+    	socket.on('sensorsValues', function(values){
+    		$('#temperature').text(values.temp + "°");
+    		$('#umidity').text(values.umid);
+    	});
+    
+	    socket.on('clock', function(values){
+    		$('#clock').text( values );
+    	});
+    
+    });
+    
+    
 });//ready
 
 //HEATINGSYSTEM
