@@ -8,6 +8,7 @@ var calendar = require('/Termostato/node_modules/Controllers/calendar.js');
 var dashboard = require('/Termostato/node_modules/Controllers/dashboard.js');
 var sys = require('sys')
 var exec = require('child_process').exec;
+var fileWriter = require('Controllers/fileWriter');
 
 var matrix = {};
 
@@ -64,6 +65,19 @@ dispatcher.onGet("/HomePage", function (req, res) {
 	}
 	console.log("HomePage get");
     bind.toFile('/Termostato/template/pageMain.tpl', calendar.myCalendar ,
+        function (data) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+        });
+});
+
+dispatcher.onGet("/ChartPage", function (req, res) {
+    //fermo il display
+    if (displayInterval != undefined) {
+        clearInterval(displayInterval);
+    }
+    console.log("ChartPage get");
+    bind.toFile('/Termostato/template/pageChart.tpl', "",
         function (data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);
@@ -133,6 +147,13 @@ dispatcher.onPost("/getSchedule", function (req, res) {
 	var calendarStatus = JSON.stringify( calendar.myCalendar );
     res.end( calendarStatus );
 });
+//GRAPH -> Disegno andamento temperature
+dispatcher.onGet("/getTemperatureLog", function (req, res) {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    var temperature = fileWriter.readText('./store/temperature.log');
+    var temperatureArray = "[" + temperature.substring(0,temperature.length-1) + "]";
+    res.end(temperatureArray);
+});
 
 //REMOVE
 dispatcher.onPost("/removeSchedule", function (req, res) {
@@ -151,6 +172,8 @@ function getSensorsValues()
    	var roundTemp = Math.round(p.temperatura * 100) / 100;
     var roundUmid = Math.round(p.umidita * 100) / 100;
     
+    writeLogTempHumid(roundTemp, roundUmid);
+
     return { temp: roundTemp, umid: roundUmid };
 }
 
@@ -209,4 +232,10 @@ function print()
     	matrix.reverse = false;
     
     var output = addonDisplay.write(matrix.velocity, matrix.color, matrix.reverse, matrix.text);
+}
+
+function writeLogTempHumid(temperature, humidity)
+{
+    fileWriter.append("./store/temperature.log", '{"temp":' + temperature + ',"date":' + new Date().getTime() + '},');
+    fileWriter.append("./store/humidity.log", '{"humid":' + humidity + ',"date":' + new Date().getTime() + '},');
 }
