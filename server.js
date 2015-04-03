@@ -230,7 +230,8 @@ function print() {
 }
 
 function writeLogTempHumid(temperature, humidity) {
-    if ((logCounter % 60) == 0) {
+    //ogni minuto (vedi GLOBAL_DELAY)
+    if ((logCounter % 10) == 0) {
         fileWriter.appendLog("/Termostato/store/logs", "temperature.log", new Date(), temperature + ',');
         fileWriter.appendLog("/Termostato/store/logs", "humidity.log", new Date(), humidity + ',');
     }//if
