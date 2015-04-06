@@ -14,6 +14,7 @@ var matrix = {};
 
 var GLOBAL_DELAY = 6000;
 var logCounter = 0;
+var currentTempUmid;
 
 var server = http.createServer(function (req, res) {
     dispatcher.dispatch(req, res);
@@ -30,7 +31,9 @@ output = addonThermo.begin();
 console.log(output);
 
 //START DISPLAY
-var displayInterval = setInterval(print, GLOBAL_DELAY);
+var displayInterval = setInterval(print, GLOBAL_DELAY+1000);
+var log = setInterval(writeLogTempHumid, GLOBAL_DELAY);
+var checkSchedule = setInterval(function () { calendar.checkSchedule(dashboard.HeatingSystem, currentTempUmid.temp); }, 10000);
 
 // Attach the socket.io server
 var io = sio.listen(server);
@@ -45,6 +48,7 @@ io.sockets.on('connection', function (socket) {
     //STOP perdo la connessione riattivo il display
     socket.on('disconnect', function () {
         displayInterval = setInterval(print, GLOBAL_DELAY);
+        console.log("SONO DISCONNESSO");
     });
 
     setInterval(function () {
@@ -89,7 +93,6 @@ dispatcher.onGet("/ChartPage", function (req, res) {
 dispatcher.onPost("/setSystemDate", function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
     setSystemDate(req.params.date);
-    //	console.log(req.params.date);
     res.end("ok");
 });
 
@@ -153,10 +156,11 @@ dispatcher.onPost("/getSchedule", function (req, res) {
 dispatcher.onGet("/getLog", function (req, res) {
     var startDate = req.params.date;
     var logFileName = req.params.name;
-
+    console.log(startDate + " - " + logFileName);
     if (startDate != undefined && logFileName != undefined) {
         res.writeHead(200, { "Content-Type": "plain/text" });
-        var directory = './store/logs/' + startDate + '/' + logFileName + '.log';
+        var directory = '/Termostato/store/logs/' + startDate + '/' + logFileName + '.log';
+        console.log(directory);
         var logText = fileWriter.readText(directory);
         var array = logText.substring(0, logText.length - 1); //tolgo la virgola alla fine
         res.end('[' + array + ']');
@@ -180,8 +184,6 @@ function getSensorsValues() {
     var roundTemp = Math.round(p.temperatura * 100) / 100;
     var roundUmid = Math.round(p.umidita * 100) / 100;
 
-    writeLogTempHumid(roundTemp, roundUmid);
-
     return { temp: roundTemp, umid: roundUmid };
 }
 
@@ -192,7 +194,7 @@ function setSystemDate(date) {
 
 function getCurrentDate() {
     var currentDate = new Date();
-    var current = "" + currentDate.getHours() + ":" + currentDate.getMinutes();
+    var current = "" + setZeros(currentDate.getHours()) + ":" + setZeros(currentDate.getMinutes());
     if (currentDate.getDay() == 0) {
         current += " " + "Sunday";
     }
@@ -215,13 +217,16 @@ function getCurrentDate() {
         current += " " + "Saturday";
     }
     return current;
-}
+}//getCurrentDate
+function setZeros(val) {
+    return ("" + val).length > 1 ? val : '0' + val;
+}//setZeros
 
 function print() {
-    var p = getSensorsValues();
+    currentTempUmid = getSensorsValues();
 
-    matrix.text = "t:" + p.temp + " ";
-    matrix.text += "u:" + p.umid + " ";
+    matrix.text = "t:" + currentTempUmid.temp + " ";
+    matrix.text += "u:" + currentTempUmid.umid + " ";
     matrix.velocity = 10;
     matrix.color = 'green';
     matrix.reverse = false;
@@ -229,11 +234,15 @@ function print() {
     var output = addonDisplay.write(matrix.velocity, matrix.color, matrix.reverse, matrix.text);
 }
 
-function writeLogTempHumid(temperature, humidity) {
-    //ogni minuto (vedi GLOBAL_DELAY)
-    if ((logCounter % 10) == 0) {
-        fileWriter.appendLog("/Termostato/store/logs", "temperature.log", new Date(), temperature + ',');
-        fileWriter.appendLog("/Termostato/store/logs", "humidity.log", new Date(), humidity + ',');
+function writeLogTempHumid() {
+    currentTempUmid = getSensorsValues();
+    if (currentTempUmid.temp != undefined || currentTempUmid.umid != undefined) {
+        //ogni minuto (vedi GLOBAL_DELAY)
+        if ((logCounter % 10) == 0) {
+            fileWriter.appendLog("/Termostato/store/logs", "temperature.log", new Date(), currentTempUmid.temp + ',');
+            fileWriter.appendLog("/Termostato/store/logs", "humidity.log", new Date(), currentTempUmid.umid + ',');
+        }//if
+        logCounter++;
     }//if
-    logCounter++;
 }//writeLogTempHumid
+

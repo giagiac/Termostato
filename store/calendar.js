@@ -1,29 +1,14 @@
 {
     "monday": [
         {
-            "start": "15:23",
-            "end": "16:23",
-            "temperature": "18"
+            "start": "23:51",
+            "end": "23:52",
+            "temperature": "16"
         },
         {
-            "start": "17:23",
-            "end": "18:23",
-            "temperature": "18"
-        },
-        {
-            "start": "19:23",
-            "end": "20:23",
-            "temperature": "20"
-        },
-        {
-            "start": "21:12",
-            "end": "22:13",
-            "temperature": "20"
-        },
-        {
-            "start": "01:36",
-            "end": "04:36",
-            "temperature": "18"
+            "start": "23:53",
+            "end": "23:54",
+            "temperature": "19"
         }
     ],
     "tuesday": [],
@@ -36,18 +21,6 @@
         }
     ],
     "friday": [],
-    "saturday": [
-        {
-            "start": "17:36",
-            "end": "17:39",
-            "temperature": "18"
-        }
-    ],
-    "sunday": [
-        {
-            "start": "15:57",
-            "end": "15:58",
-            "temperature": "18"
-        }
-    ]
+    "saturday": [],
+    "sunday": []
 }

@@ -82,7 +82,7 @@
 				text: ''
 			},
 			xAxis: {
-				categories: ['lunedi', 'Martedi', 'Mercoledi', 'Giovedi', 'Venerdi', 'Sabato', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+				categories: []
 			},
 			yAxis: {
 				title: {
