@@ -31,7 +31,7 @@ output = addonThermo.begin();
 console.log(output);
 
 //START DISPLAY
-var displayInterval = setInterval(print, GLOBAL_DELAY+1000);
+var displayInterval = undefined; // setInterval(print, GLOBAL_DELAY+1000);
 var log = setInterval(writeLogTempHumid, GLOBAL_DELAY);
 var checkSchedule = setInterval(function () { calendar.checkSchedule(dashboard.HeatingSystem, currentTempUmid.temp); }, 10000);
 
