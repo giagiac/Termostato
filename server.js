@@ -10,9 +10,10 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 var fileWriter = require('Controllers/fileWriter');
 
-var matrix = {};
-
+var GLOBAL_DELAY_CUSTOM_TEXT = 600;
 var GLOBAL_DELAY = 6000;
+var GLOBAL_DELAY_SENSOR = 3000;
+var GLOBAL_DELAY_CHECK_SCHEDULE = 10000;
 var logCounter = 0;
 var currentTempUmid;
 
@@ -31,28 +32,23 @@ output = addonThermo.begin();
 console.log(output);
 
 //START DISPLAY
-var displayInterval = undefined; // setInterval(print, GLOBAL_DELAY+1000);
-var log = setInterval(writeLogTempHumid, GLOBAL_DELAY);
-var checkSchedule = setInterval(function () { calendar.checkSchedule(dashboard.HeatingSystem, currentTempUmid.temp); }, 10000);
+var sensorValueInterval = setInterval(getSensorsValues, GLOBAL_DELAY_SENSOR);
+var logInterval = setInterval(writeLogTempHumid, GLOBAL_DELAY); //scrive il log ogni minuto % 10
+var checkScheduleInterval = setInterval(checkSchedule, GLOBAL_DELAY_CHECK_SCHEDULE);
+var customTextInterval;
 
 // Attach the socket.io server
 var io = sio.listen(server);
 
 io.sockets.on('connection', function (socket) {
 
-    //fermo il display
-    if (displayInterval != undefined) {
-        clearInterval(displayInterval);
-    }
-
     //STOP perdo la connessione riattivo il display
     socket.on('disconnect', function () {
-        displayInterval = setInterval(print, GLOBAL_DELAY);
         console.log("SONO DISCONNESSO");
     });
 
     setInterval(function () {
-        socket.emit('sensorsValues', getSensorsValues());
+        socket.emit('sensorsValues', currentTempUmid);
     }, GLOBAL_DELAY);
 
     setInterval(function () {
@@ -64,10 +60,6 @@ dispatcher.setStatic('resources');
 dispatcher.setStaticDirname('/Termostato');
 
 dispatcher.onGet("/HomePage", function (req, res) {
-    //fermo il display
-    if (displayInterval != undefined) {
-        clearInterval(displayInterval);
-    }
     console.log("HomePage get");
     bind.toFile('/Termostato/template/pageMain.tpl', calendar.myCalendar,
         function (data) {
@@ -77,10 +69,6 @@ dispatcher.onGet("/HomePage", function (req, res) {
 });
 
 dispatcher.onGet("/ChartPage", function (req, res) {
-    //fermo il display
-    if (displayInterval != undefined) {
-        clearInterval(displayInterval);
-    }
     console.log("ChartPage get");
     bind.toFile('/Termostato/template/pageChart.tpl', "",
         function (data) {
@@ -119,7 +107,7 @@ dispatcher.onGet("/setHeatingSystem", function (req, res) {
 dispatcher.onPost("/setDisplayLight", function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
     var displayLightStatus = JSON.stringify(dashboard.DisplayLight.setParam(req.params));
-    res.end(JSON.stringify(displayLightStatus));
+    res.end(displayLightStatus);
 });
 dispatcher.onPost("/getDisplayLight", function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
@@ -167,6 +155,15 @@ dispatcher.onGet("/getLog", function (req, res) {
     }
     else { res.end("[]"); }
 });
+dispatcher.onPost("/setCustomText", function (req, res) {
+
+    dashboard.CustomText.setObject(req.params);
+    dashboard.DisplayLight.setParam({ "customText": 'true' }); //dice di avviare la modalità customText
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    var response = JSON.stringify({"response":"ok"});
+    res.end(response);
+});
 
 //REMOVE
 dispatcher.onPost("/removeSchedule", function (req, res) {
@@ -184,7 +181,7 @@ function getSensorsValues() {
     var roundTemp = Math.round(p.temperatura * 100) / 100;
     var roundUmid = Math.round(p.umidita * 100) / 100;
 
-    return { temp: roundTemp, umid: roundUmid };
+    currentTempUmid = { temp: roundTemp, umid: roundUmid };
 }
 
 function setSystemDate(date) {
@@ -222,20 +219,46 @@ function setZeros(val) {
     return ("" + val).length > 1 ? val : '0' + val;
 }//setZeros
 
-function print() {
-    currentTempUmid = getSensorsValues();
+function printTempUmid() {
+    var text = "t:" + currentTempUmid.temp + " ";
+        text += "u:" + currentTempUmid.umid + " ";
+    var velocity = 1;
 
-    matrix.text = "t:" + currentTempUmid.temp + " ";
-    matrix.text += "u:" + currentTempUmid.umid + " ";
-    matrix.velocity = 10;
-    matrix.color = 'green';
-    matrix.reverse = false;
+    var timeSpanCalculated = GLOBAL_DELAY_CUSTOM_TEXT * text.length * velocity;
+    console.log(timeSpanCalculated);
+    customTextInterval = setInterval(function () {
+        var text = "t:" + currentTempUmid.temp + " ";
+            text += "u:" + currentTempUmid.umid + " ";
+        var velocity = 1;
+        var color = 'green';
+        reverse = false;
 
-    var output = addonDisplay.write(matrix.velocity, matrix.color, matrix.reverse, matrix.text);
+        var output = addonDisplay.write(velocity, color, reverse, text);
+        console.log(output);
+    }, timeSpanCalculated);
+}
+
+function printCustomText() {
+    var jsonObject = dashboard.CustomText.getObject(); //carico il testo settato in precedenza
+
+    var timeSpanCalculated = GLOBAL_DELAY_CUSTOM_TEXT * jsonObject.text.length * jsonObject.delay;
+    console.log(timeSpanCalculated);
+    customTextInterval = setInterval(function () {
+
+        var text = jsonObject.text + " ";
+        var delay = parseInt(jsonObject.delay, 10);
+        var color = jsonObject.color;
+        var reverse = jsonObject.reverse == 'true' ? true : false;
+
+        var output = addonDisplay.write(delay, color, reverse, text);
+        console.log(output);
+
+    }, timeSpanCalculated);
+
+    
 }
 
 function writeLogTempHumid() {
-    currentTempUmid = getSensorsValues();
     if (currentTempUmid.temp != undefined || currentTempUmid.umid != undefined) {
         //ogni minuto (vedi GLOBAL_DELAY)
         if ((logCounter % 10) == 0) {
@@ -245,4 +268,32 @@ function writeLogTempHumid() {
         logCounter++;
     }//if
 }//writeLogTempHumid
+
+function checkSchedule() {
+    calendar.checkSchedule(dashboard.HeatingSystem, currentTempUmid.temp);
+
+    //fermo il display (reset)
+    if (customTextInterval != undefined) {
+        clearInterval(customTextInterval);
+    }
+
+    var displayLight = dashboard.DisplayLight.getParam();
+    if (displayLight.alwaysOn == 'true')
+    {
+        //fermo il display
+        if (customTextInterval != undefined) {
+            clearInterval(customTextInterval);
+        }
+    }
+    else if (displayLight.tempUmid == 'true')
+    {
+        printTempUmid();
+    }
+    else if (displayLight.customText == 'true')
+    {
+        printCustomText();
+    }
+
+
+}
 

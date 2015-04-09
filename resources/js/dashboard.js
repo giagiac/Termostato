@@ -13,16 +13,19 @@ $(function() {
     $('#radio-choice-display-always-on').click(function(){
     	getSetDisplayLight('/setDisplayLight', { alwaysOn: true } );
     });
-    $('#radio-choice-display-sec-20').click(function(){
-    	getSetDisplayLight('/setDisplayLight', { sec20: true } );
+    $('#radio-choice-display-temp-umid').click(function(){
+    	getSetDisplayLight('/setDisplayLight', { tempUmid: true } );
     }); 
-    $('#radio-choice-display-hour-1').click(function(){
-    	getSetDisplayLight('/setDisplayLight', { hour1: true } );
+    $('#radio-choice-display-custom-text').click(function(){
+    	getSetDisplayLight('/setDisplayLight', { customText: true } );
     });
     
     $('#checkbox-manual').click(function(){
 		getSetHeatingSystem("/setHeatingSystem");
     });
+
+    var text = $('#custom-text');
+    setCustomText("/setCustomText", text);
     
     //Thread dei sensori e dell'orologio
     
@@ -68,23 +71,23 @@ function getSetDisplayLight(url, param)
 	$.post( url, param, function(param){
 		if(param != undefined)
    		{
-			if(param.alwaysOn === true)
+			if(param.alwaysOn == 'true')
 			{
 				$('#radio-choice-display-always-on').attr("checked", true).checkboxradio("refresh");
-				$('#radio-choice-display-sec-20').attr("checked", false).checkboxradio("refresh");
-    			$('#radio-choice-display-hour-1').attr("checked", false).checkboxradio("refresh");
+				$('#radio-choice-display-temp-umid').attr("checked", false).checkboxradio("refresh");
+    			$('#radio-choice-display-custom-text').attr("checked", false).checkboxradio("refresh");
     		}
-    		else if(param.sec20 === true) 
+    		else if(param.tempUmid == 'true') 
     		{
     			$('#radio-choice-display-always-on').attr("checked", false).checkboxradio("refresh");
-    			$('#radio-choice-display-sec-20').attr("checked", true).checkboxradio("refresh");
-    			$('#radio-choice-display-hour-1').attr("checked", false).checkboxradio("refresh");
+    			$('#radio-choice-display-temp-umid').attr("checked", true).checkboxradio("refresh");
+    			$('#radio-choice-display-custom-text').attr("checked", false).checkboxradio("refresh");
     		}
-    		else if(param.hour1 === true) 
+    		else if(param.customText == 'true') 
     		{
     			$('#radio-choice-display-always-on').attr("checked", false).checkboxradio("refresh");
-    			$('#radio-choice-display-sec-20').attr("checked", false).checkboxradio("refresh");
-    			$('#radio-choice-display-hour-1').attr("checked", true).checkboxradio("refresh");
+    			$('#radio-choice-display-temp-umid').attr("checked", false).checkboxradio("refresh");
+    			$('#radio-choice-display-custom-text').attr("checked", true).checkboxradio("refresh");
     		}
     	}//if
     	waitHide();
@@ -110,4 +113,33 @@ function getSetSeason(url, param)
    		}//if
    		waitHide();
    	 });//post
+}//getSetSeason
+
+function setCustomText(url, customText) {
+    waitShow();
+
+    customText.keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            var text = customText.val();
+
+            var patt = new RegExp("^[\x00-\x7F]+$");
+            if (patt.test(text)) {
+                var delay = 1;
+                var color = "red";
+                var reverse = false;
+                var jsonObject = {
+                    "text": text,
+                    "delay": delay,
+                    "color": color,
+                    "reverse": reverse
+                };
+                $.post(url, jsonObject, function (response) {
+                    waitHide();
+                    customText.val('');
+                });//post
+            }//if
+            else { alert('Don\'t use no valid chars'); }
+        }//if
+    });
 }//getSetSeason

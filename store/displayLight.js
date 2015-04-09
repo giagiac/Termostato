@@ -1,3 +1,3 @@
 {
-    "alwaysOn": "true"
+    "customText": "true"
 }

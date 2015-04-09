@@ -57,6 +57,11 @@
   	<h1>Dashboard</h1>
   </div>  
   (:file ~ /Termostato/template/dashboard.tpl:)
+
+  <div data-role="header" data-theme="b">
+  	<h1>Display text</h1>
+  </div>  
+  (:file ~ /Termostato/template/displayText.tpl:)
   
 </div>
 
