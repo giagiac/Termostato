@@ -45,6 +45,7 @@ io.sockets.on('connection', function (socket) {
     //STOP perdo la connessione riattivo il display
     socket.on('disconnect', function () {
         console.log("SONO DISCONNESSO");
+        dashboard.DisplayLight.setParam('{"tempUmid": "true"}');
     });
 
     setInterval(function () {
@@ -65,6 +66,7 @@ dispatcher.onGet("/HomePage", function (req, res) {
         function (data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);
+            dashboard.DisplayLight.setParam('{"alwaysOn": "true"}');
         });
 });
 
@@ -74,6 +76,7 @@ dispatcher.onGet("/ChartPage", function (req, res) {
         function (data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);
+            dashboard.DisplayLight.setParam('{"alwaysOn": "true"}');
         });
 });
 
