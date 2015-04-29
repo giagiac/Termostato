@@ -31,16 +31,17 @@ $(function() {
     
     var socket = io.connect();
     socket.on('connect', function () {
-    	
-    	socket.on('sensorsValues', function(values){
-    		$('#temperature').text(values.temp + "°");
-    		$('#umidity').text(values.umid);
-    	});
-    
-	    socket.on('clock', function(values){
-    		$('#clock').text( values );
-    	});
-    
+
+        socket.on('message', function (values, params) {
+            if (values == "sensorsValues") {
+                $('#temperature').text(params.temp + "°");
+                $('#umidity').text(params.umid);
+            }
+            if (values == "clock")
+            {
+                $('#clock').text(params);
+            }
+        });    
     });
     
     
