@@ -49,11 +49,11 @@ io.sockets.on('connection', function (socket) {
     });
 
     setInterval(function () {
-        socket.emit('sensorsValues', currentTempUmid);
+        socket.send('sensorsValues', currentTempUmid);
     }, GLOBAL_DELAY);
 
     setInterval(function () {
-        socket.emit('clock', getCurrentDate());
+        socket.send('clock', getCurrentDate());
     }, GLOBAL_DELAY);
 });
 
@@ -159,7 +159,6 @@ dispatcher.onGet("/getLog", function (req, res) {
     else { res.end("[]"); }
 });
 dispatcher.onPost("/setCustomText", function (req, res) {
-
     dashboard.CustomText.setObject(req.params);
     dashboard.DisplayLight.setParam({ "customText": 'true' }); //dice di avviare la modalità customText
 
@@ -229,7 +228,7 @@ function printTempUmid() {
 
     var timeSpanCalculated = GLOBAL_DELAY_CUSTOM_TEXT * text.length * velocity;
     console.log(timeSpanCalculated);
-    customTextInterval = setInterval(function () {
+    customTextInterval = setTimeout(function () {
         var text = "t:" + currentTempUmid.temp + " ";
             text += "u:" + currentTempUmid.umid + " ";
         var velocity = 1;
@@ -246,7 +245,7 @@ function printCustomText() {
 
     var timeSpanCalculated = GLOBAL_DELAY_CUSTOM_TEXT * jsonObject.text.length * jsonObject.delay;
     console.log(timeSpanCalculated);
-    customTextInterval = setInterval(function () {
+    customTextInterval = setTimeout(function () {
 
         var text = jsonObject.text + " ";
         var delay = parseInt(jsonObject.delay, 10);
@@ -276,9 +275,9 @@ function checkSchedule() {
     calendar.checkSchedule(dashboard.HeatingSystem, currentTempUmid.temp);
 
     //fermo il display (reset)
-    if (customTextInterval != undefined) {
-        clearInterval(customTextInterval);
-    }
+    //if (customTextInterval != undefined) {
+    //    clearInterval(customTextInterval);
+    //}
 
     var displayLight = dashboard.DisplayLight.getParam();
     if (displayLight.alwaysOn == 'true')
