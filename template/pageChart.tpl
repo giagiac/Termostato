@@ -66,7 +66,8 @@
 
 	function setZeros(val)
 	{
-		return val.lenght > 1 ? val : '0' + val;
+		console.log(val.lenght);
+		return val.lenght == 2 ? val : '0' + val;
 	}//setZeros
 
 	function drawChart()
